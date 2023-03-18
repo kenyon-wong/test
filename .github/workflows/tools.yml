@@ -27,7 +27,7 @@ jobs:
           echo 'installing gospider...'
           go install -v github.com/jaeles-project/gospider@latest
           echo 'installing asnmap...'
-          go install -v github.com/projectdiscovery/asnmap/cmd/asnmap@latest
+          # go install -v github.com/projectdiscovery/asnmap/cmd/asnmap@latest
           echo 'installing dnsx...'
           go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
           echo 'installing httpx...'
