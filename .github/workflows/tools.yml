@@ -18,24 +18,43 @@ jobs:
 
       - name: Install go tools
         run: |
+          echo 'installing puredns...'
           go install -v github.com/d3mondev/puredns/v2@latest
+          echo 'installing ffuf...'
           go install -v github.com/ffuf/ffuf@latest
+          echo 'installing haktrails...'
           go install -v github.com/hakluke/haktrails@latest
+          echo 'installing gospider...'
           go install -v github.com/jaeles-project/gospider@latest
+          echo 'installing asnmap...'
           go install -v github.com/projectdiscovery/asnmap/cmd/asnmap@latest
+          echo 'installing dnsx...'
           go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+          echo 'installing httpx...'
           go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+          echo 'installing interactsh...'
           go install -v github.com/projectdiscovery/interactsh/cmd/interactsh-client@latest
+          echo 'installing mapcidr...'
           go install -v github.com/projectdiscovery/mapcidr/cmd/mapcidr@latest
+          echo 'installing naabu...'
           go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
+          echo 'installing notify...'
           go install -v github.com/projectdiscovery/notify/cmd/notify@latest
+          echo 'installing nuclei...'
           go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
+          echo 'installing proxify...'
           go install -v github.com/projectdiscovery/proxify/cmd/proxify@latest
+          echo 'installing shuffledns...'
           go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
+          echo 'installing subfinder...'
           go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+          echo 'installing tlsx...'
           go install -v github.com/projectdiscovery/tlsx/cmd/tlsx@latest
+          echo 'installing uncover...'
           go install -v github.com/projectdiscovery/uncover/cmd/uncover@latest
+          echo 'installing tew...'
           go install -v github.com/pry0cc/tew@latest
+          echo 'installing anew...'
           go install -v github.com/tomnomnom/anew@latest
       - name: Install massdns
         run: |
@@ -43,6 +62,9 @@ jobs:
           cd massdns
           make
           cp bin/massdns /usr/local/bin
+
+      - name: Output tool names
+        run: echo "All tools installed."
 
       - name: Copy binaries to /usr/local/bin
         run: sudo cp ~/go/bin/* /usr/local/bin
