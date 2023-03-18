@@ -44,9 +44,6 @@ jobs:
           make
           cp bin/massdns /usr/local/bin
 
-      - name: Output tool names
-        run: echo "Tools installed: puredns, ffuf, haktrails, gospider, asnmap, dnsx, httpx, interactsh-client, mapcidr, naabu, notify, nuclei, proxify, shuffledns, subfinder, tlsx, uncover, tew, anew"
-
       - name: Copy binaries to /usr/local/bin
         run: sudo cp ~/go/bin/* /usr/local/bin
 
