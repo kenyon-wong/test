@@ -13,7 +13,6 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update && sudo apt-get -y install vim zsh nmap masscan parallel jq htop duf iftop git golang libpcap-dev gcc make screen tmux
-
       - name: Set GO111MODULE
         run: export GO111MODULE=on
 
@@ -38,13 +37,15 @@ jobs:
           go install -v github.com/projectdiscovery/uncover/cmd/uncover@latest
           go install -v github.com/pry0cc/tew@latest
           go install -v github.com/tomnomnom/anew@latest
-
       - name: Install massdns
         run: |
           git clone https://github.com/blechschmidt/massdns.git
           cd massdns
           make
           cp bin/massdns /usr/local/bin
+
+      - name: Output tool names
+        run: echo "Tools installed: puredns, ffuf, haktrails, gospider, asnmap, dnsx, httpx, interactsh-client, mapcidr, naabu, notify, nuclei, proxify, shuffledns, subfinder, tlsx, uncover, tew, anew"
 
       - name: Copy binaries to /usr/local/bin
         run: sudo cp ~/go/bin/* /usr/local/bin
