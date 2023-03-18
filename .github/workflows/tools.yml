@@ -1,79 +1,44 @@
-name: Build and pack binaries
-
-on: [push, pull_request]
+name: 🔨 EHole_Binaries_Build
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    name: Test Builds
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Install dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get -y install build-essential
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: Clone
         run: |
-          sudo apt-get update && sudo apt-get -y install vim zsh nmap masscan parallel jq htop duf iftop git golang libpcap-dev gcc make screen tmux
-      - name: Set GO111MODULE
-        run: export GO111MODULE=on
+            git clone https://github.com/EdgeSecurityTeam/EHole.git
+          
+      - name: Static analysis
+        uses: wjdp/htmltest-action@v1
+        with:
+          args: .
 
-      - name: Install go tools
+      - name: Build
         run: |
-          echo 'installing puredns...'
-          go install -v github.com/d3mondev/puredns/v2@latest
-          echo 'installing ffuf...'
-          go install -v github.com/ffuf/ffuf@latest
-          echo 'installing haktrails...'
-          go install -v github.com/hakluke/haktrails@latest
-          echo 'installing gospider...'
-          go install -v github.com/jaeles-project/gospider@latest
-          echo 'installing asnmap...'
-          # go install -v github.com/projectdiscovery/asnmap/cmd/asnmap@latest
-          echo 'installing dnsx...'
-          go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
-          echo 'installing httpx...'
-          go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
-          echo 'installing interactsh...'
-          go install -v github.com/projectdiscovery/interactsh/cmd/interactsh-client@latest
-          echo 'installing mapcidr...'
-          go install -v github.com/projectdiscovery/mapcidr/cmd/mapcidr@latest
-          echo 'installing naabu...'
-          go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
-          echo 'installing notify...'
-          go install -v github.com/projectdiscovery/notify/cmd/notify@latest
-          echo 'installing nuclei...'
-          go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
-          echo 'installing proxify...'
-          go install -v github.com/projectdiscovery/proxify/cmd/proxify@latest
-          echo 'installing shuffledns...'
-          go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
-          echo 'installing subfinder...'
-          go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-          echo 'installing tlsx...'
-          go install -v github.com/projectdiscovery/tlsx/cmd/tlsx@latest
-          echo 'installing uncover...'
-          go install -v github.com/projectdiscovery/uncover/cmd/uncover@latest
-          echo 'installing tew...'
-          go install -v github.com/pry0cc/tew@latest
-          echo 'installing anew...'
-          go install -v github.com/tomnomnom/anew@latest
-      - name: Install massdns
-        run: |
-          git clone https://github.com/blechschmidt/massdns.git
-          cd massdns
-          make
-          cp bin/massdns /usr/local/bin
+            go build -o ehole . 
+        working-directory: EHole
 
-      - name: Output tool names
-        run: echo "All tools installed."
-
-      - name: Copy binaries to /usr/local/bin
-        run: sudo cp ~/go/bin/* /usr/local/bin
-
-      - name: Pack binaries into tar.gz
-        run: tar -zcvf binaries.tar.gz /usr/local/bin/*
-
-      - name: Upload binaries to artifacts
+      - name: Push changes
         uses: actions/upload-artifact@v2
         with:
-          name: binaries
-          path: binaries.tar.gz
+          name: ehole
+          path: EHole/ehole
